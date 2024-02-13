@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">Study Tracker</string>
+    <string name="studytracker">StudyTracker</string>
+    <string name="add_subject">Add Subject</string>
+    <string name="empty_subject">You  don\'t have any subjects.\n Click the + button to add new subject.</string>
+    <string name="subjects">SUBJECTS</string>
 </resources>
