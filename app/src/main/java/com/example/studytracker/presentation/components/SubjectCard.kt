@@ -63,5 +63,7 @@ fun CardPreview() {
     SubjectCard(
         subjectName = "English" ,
         gradientColors = gradient1
-    ) {}
+    ) {
+
+    }
 }
