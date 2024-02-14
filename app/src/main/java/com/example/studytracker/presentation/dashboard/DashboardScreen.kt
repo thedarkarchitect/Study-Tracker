@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -18,6 +19,8 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -26,6 +29,10 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -35,9 +42,14 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.studytracker.R
+import com.example.studytracker.domain.model.Session
 import com.example.studytracker.domain.model.Subject
+import com.example.studytracker.domain.model.Task
+import com.example.studytracker.presentation.components.AddSubjectDialog
 import com.example.studytracker.presentation.components.CountCard
 import com.example.studytracker.presentation.components.SubjectCard
+import com.example.studytracker.presentation.components.studySessionsList
+import com.example.studytracker.presentation.components.tasksList
 import com.example.studytracker.ui.theme.StudyTrackerTheme
 
 @Composable
@@ -46,13 +58,86 @@ fun DashboardScreen(
 ) {
 
     val subjects = listOf(
-        Subject(name = "Art", goalHours = 10f, colors = Subject.subjectCardColors.random()),
-        Subject(name = "Literature", goalHours = 10f, colors = Subject.subjectCardColors.random()),
-        Subject(name = "Geography", goalHours = 10f, colors = Subject.subjectCardColors.random()),
-        Subject(name = "Mathematics", goalHours = 10f, colors = Subject.subjectCardColors.random()),
-        Subject(name = "Biology", goalHours = 10f, colors = Subject.subjectCardColors.random()),
-        Subject(name = "Business", goalHours = 10f, colors = Subject.subjectCardColors.random())
+        Subject(name = "Art", goalHours = 10f, colors = Subject.subjectCardColors.random(), subjectId = 0),
+        Subject(name = "Literature", goalHours = 10f, colors = Subject.subjectCardColors.random(), subjectId = 0),
+        Subject(name = "Geography", goalHours = 10f, colors = Subject.subjectCardColors.random(), subjectId = 0),
+        Subject(name = "Mathematics", goalHours = 10f, colors = Subject.subjectCardColors.random(), subjectId = 0),
+        Subject(name = "Biology", goalHours = 10f, colors = Subject.subjectCardColors.random(), subjectId = 0),
+        Subject(name = "Business", goalHours = 10f, colors = Subject.subjectCardColors.random(), subjectId = 0)
     )
+
+    val tasks = listOf(
+        Task(
+            title = "Prepare notes",
+            description = "",
+            dueDate = 0L,
+            priority = 1,
+            relatedToSubject = "",
+            isComplete = false,
+            taskSubjectId = 0,
+            taskId = 1
+        ),
+        Task(
+            title = "Do Homework",
+            description = "",
+            dueDate = 0L,
+            priority = 2,
+            relatedToSubject = "",
+            isComplete = true,
+            taskSubjectId = 0,
+            taskId = 1
+        ),
+        Task(
+            title = "Write essays",
+            description = "",
+            dueDate = 0L,
+            priority = 0,
+            relatedToSubject = "",
+            isComplete = false,
+            taskSubjectId = 0,
+            taskId = 1
+        ),
+    )
+
+    val sessions = listOf(
+        Session(
+            relatedToSubject = "English",
+            date = 0L,
+            duration = 2,
+            sessionSubjectId = 0,
+            sessionId = 0
+        ),
+        Session(
+            relatedToSubject = "English",
+            date = 0L,
+            duration = 2,
+            sessionSubjectId = 0,
+            sessionId = 0
+        ),
+        Session(
+            relatedToSubject = "English",
+            date = 0L,
+            duration = 2,
+            sessionSubjectId = 0,
+            sessionId = 0
+        ),
+        Session(
+            relatedToSubject = "English",
+            date = 0L,
+            duration = 2,
+            sessionSubjectId = 0,
+            sessionId = 0
+        ),
+    )
+
+    var isAddSubjectDialogOpen by rememberSaveable { mutableStateOf(false) }
+
+    AddSubjectDialog(
+        isOpen = isAddSubjectDialogOpen,
+        onDismissRequest = { isAddSubjectDialogOpen = false }
+    ) {
+        isAddSubjectDialogOpen = false
+    }
 
     Scaffold(
         topBar = { DashboardTopBar() }
@@ -81,10 +166,44 @@ fun DashboardScreen(
             item {
                 SubjectCardsSection(
                     modifier = modifier.fillMaxWidth(),
-                    subjectList = subjects
+                    subjectList = subjects,
+                    onAddIconClicked = { isAddSubjectDialogOpen = false }
                 )
             }
+            item {
+                Button(
+                    onClick = { /*TODO*/ },
+                    modifier = modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 48.dp, vertical = 20.dp),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = MaterialTheme.colorScheme.inversePrimary
+                    )
+                ){
+                    Text(
+                        text = stringResource(R.string.start_study_session)
+                    )
+                }
+            }
+            tasksList(
+                sectionTitle = "UPCOMING TASKS",
+                emptyTaskText = "You don't have any upcoming tasks.\n Click the + button in subject screen to add new task.",
+//                tasks = emptyList()
+                tasks = tasks,
+                onCheckBoxClick = {},
+                onTaskCardClick = {}
+            )
 
+            item {
+                Spacer(modifier = modifier.height(20.dp))
+            }
+
+            studySessionsList(
+                sectionTitle = "RECENT STUDY SESSIONS",
+                emptyTaskText = "You don't have any recent study sessions.\n Start a study session to begin recording your progress.",
+                sessions = sessions,
+                onDeleteIconClick = {}
+            )
         }
     }
 }
@@ -134,7 +253,8 @@ fun CountCardsSection(
 fun SubjectCardsSection(
     modifier: Modifier = Modifier,
     subjectList: List<Subject>,
-    emptyListText: String = stringResource(R.string.empty_subject)
+    emptyListText: String = stringResource(R.string.empty_subject),
+    onAddIconClicked: () -> Unit
 ) {
     Column{
         //always shown
@@ -149,7 +269,7 @@ fun SubjectCardsSection(
             )
 
             IconButton(
-                onClick = {}
+                onClick = onAddIconClicked
             ) {
                Icon(
                    imageVector = Icons.Default.Add,
@@ -170,7 +290,7 @@ fun SubjectCardsSection(
             )
             Text(
                 modifier = modifier.fillMaxWidth(),
-                text = stringResource(R.string.empty_subject),
+                text = emptyListText,
                 style = MaterialTheme.typography.bodySmall,
                 color = Color.Gray,
                 textAlign = TextAlign.Center
