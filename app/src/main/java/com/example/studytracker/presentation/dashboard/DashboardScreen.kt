@@ -31,6 +31,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -47,6 +48,7 @@ import com.example.studytracker.domain.model.Subject
 import com.example.studytracker.domain.model.Task
 import com.example.studytracker.presentation.components.AddSubjectDialog
 import com.example.studytracker.presentation.components.CountCard
+import com.example.studytracker.presentation.components.DeleteDialog
 import com.example.studytracker.presentation.components.SubjectCard
 import com.example.studytracker.presentation.components.studySessionsList
 import com.example.studytracker.presentation.components.tasksList
@@ -131,13 +133,32 @@ fun DashboardScreen(
     )
 
     var isAddSubjectDialogOpen by rememberSaveable { mutableStateOf(false) }
+    var isDeleteSessionDialogOpen by rememberSaveable { mutableStateOf(false) }
+
+    var subjectName by remember { mutableStateOf("") }
+    var goalHours by remember { mutableStateOf("") }
+    var selectedColor by remember { mutableStateOf(Subject.subjectCardColors.random()) }
+
 
     AddSubjectDialog(
         isOpen = isAddSubjectDialogOpen,
-        onDismissRequest = { isAddSubjectDialogOpen = false }
-    ) {
-        isAddSubjectDialogOpen = false
-    }
+        subjectName = subjectName,
+        goalHours = goalHours,
+        onSubjectNameChange = { subjectName = it },
+        onGoalHoursChange = { goalHours = it },
+        onDismissRequest = { isAddSubjectDialogOpen = false },
+        selectedColors = emptyList(),
+        onColorChange = { selectedColor = it },
+        onConfirmButtonClick = { isAddSubjectDialogOpen = false }
+    )
+
+    DeleteDialog(
+        isOpen = isDeleteSessionDialogOpen,
+        title = "Delete Session",
+        bodyText = "Are you sure, you want to delete this session? Your studied hours will be reduced by this session time. This action can not be undone.",
+        onDismissRequest = { isDeleteSessionDialogOpen = false },
+        onConfirmButtonClick = { isDeleteSessionDialogOpen = false }
+    )
 
     Scaffold(
         topBar = { DashboardTopBar() }
@@ -202,7 +223,7 @@ fun DashboardScreen(
                 sectionTitle = "RECENT STUDY SESSIONS",
                 emptyTaskText = "You don't have any recent study sessions.\n Start a study session to begin recording your progress.",
                 sessions = sessions,
-                onDeleteIconClick = {}
+                onDeleteIconClick = { isDeleteSessionDialogOpen = true }
             )
         }
     }
