@@ -76,4 +76,5 @@ val gradient5 = listOf(Color(0xFF00ff87), Color(0xFF60efff))
 
 val Green = Color(0xFF70e000)
 val Orange = Color(0xFFff5400)
+val OrangeError = Color(0xFFdc2f02)
 val Purple = Color(0xFF8b2fc9)

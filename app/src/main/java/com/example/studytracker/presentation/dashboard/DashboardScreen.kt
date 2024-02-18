@@ -43,94 +43,57 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.studytracker.R
-import com.example.studytracker.domain.model.Session
 import com.example.studytracker.domain.model.Subject
-import com.example.studytracker.domain.model.Task
 import com.example.studytracker.presentation.components.AddSubjectDialog
 import com.example.studytracker.presentation.components.CountCard
 import com.example.studytracker.presentation.components.DeleteDialog
 import com.example.studytracker.presentation.components.SubjectCard
 import com.example.studytracker.presentation.components.studySessionsList
 import com.example.studytracker.presentation.components.tasksList
+import com.example.studytracker.presentation.destinations.SessionScreenRouteDestination
+import com.example.studytracker.presentation.destinations.SubjectScreenRouteDestination
+import com.example.studytracker.presentation.destinations.TaskScreenRouteDestination
+import com.example.studytracker.presentation.subject.SubjectScreenNavArgs
+import com.example.studytracker.presentation.task.TaskScreenNavArgs
+import com.example.studytracker.sessions
+import com.example.studytracker.subjects
+import com.example.studytracker.tasks
 import com.example.studytracker.ui.theme.StudyTrackerTheme
+import com.ramcosta.composedestinations.annotation.Destination
+import com.ramcosta.composedestinations.annotation.RootNavGraph
+import com.ramcosta.composedestinations.navigation.DestinationsNavigator
+
+@RootNavGraph(start = true)
+@Destination
+@Composable
+fun DashboardScreenRoute(
+    navigator: DestinationsNavigator
+) {
+    DashboardScreen(
+        onSubjectCardClick = { subjectId ->
+            subjectId?.let {
+                val navArg = SubjectScreenNavArgs(subjectId = subjectId)
+                navigator.navigate(SubjectScreenRouteDestination(navArgs = navArg))
+            }
+        },
+        onTaskCardClick = { taskId ->
+            val navArg = TaskScreenNavArgs(taskId = taskId, subjectId = null)
+            navigator.navigate(TaskScreenRouteDestination(navArgs = navArg))
+        },
+        onStartSessionButtonClick = {
+            navigator.navigate(SessionScreenRouteDestination())
+        }
+    )
+}
 
 @Composable
 fun DashboardScreen(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onSubjectCardClick: (Int?) -> Unit,
+    onTaskCardClick: (Int?) -> Unit,
+    onStartSessionButtonClick: () -> Unit
 ) {
 
-    val subjects = listOf(
-        Subject(name = "Art", goalHours = 10f, colors = Subject.subjectCardColors.random(), subjectId = 0),
-        Subject(name = "Literature", goalHours = 10f, colors = Subject.subjectCardColors.random(), subjectId = 0),
-        Subject(name = "Geography", goalHours = 10f, colors = Subject.subjectCardColors.random(), subjectId = 0),
-        Subject(name = "Mathematics", goalHours = 10f, colors = Subject.subjectCardColors.random(), subjectId = 0),
-        Subject(name = "Biology", goalHours = 10f, colors = Subject.subjectCardColors.random(), subjectId = 0),
-        Subject(name = "Business", goalHours = 10f, colors = Subject.subjectCardColors.random(), subjectId = 0)
-    )
-
-    val tasks = listOf(
-        Task(
-            title = "Prepare notes",
-            description = "",
-            dueDate = 0L,
-            priority = 1,
-            relatedToSubject = "",
-            isComplete = false,
-            taskSubjectId = 0,
-            taskId = 1
-        ),
-        Task(
-            title = "Do Homework",
-            description = "",
-            dueDate = 0L,
-            priority = 2,
-            relatedToSubject = "",
-            isComplete = true,
-            taskSubjectId = 0,
-            taskId = 1
-        ),
-        Task(
-            title = "Write essays",
-            description = "",
-            dueDate = 0L,
-            priority = 0,
-            relatedToSubject = "",
-            isComplete = false,
-            taskSubjectId = 0,
-            taskId = 1
-        ),
-    )
-
-    val sessions = listOf(
-        Session(
-            relatedToSubject = "English",
-            date = 0L,
-            duration = 2,
-            sessionSubjectId = 0,
-            sessionId = 0
-        ),
-        Session(
-            relatedToSubject = "English",
-            date = 0L,
-            duration = 2,
-            sessionSubjectId = 0,
-            sessionId = 0
-        ),
-        Session(
-            relatedToSubject = "English",
-            date = 0L,
-            duration = 2,
-            sessionSubjectId = 0,
-            sessionId = 0
-        ),
-        Session(
-            relatedToSubject = "English",
-            date = 0L,
-            duration = 2,
-            sessionSubjectId = 0,
-            sessionId = 0
-        ),
-    )
 
     var isAddSubjectDialogOpen by rememberSaveable { mutableStateOf(false) }
     var isDeleteSessionDialogOpen by rememberSaveable { mutableStateOf(false) }
@@ -188,12 +151,13 @@ fun DashboardScreen(
                 SubjectCardsSection(
                     modifier = modifier.fillMaxWidth(),
                     subjectList = subjects,
-                    onAddIconClicked = { isAddSubjectDialogOpen = false }
+                    onAddIconClicked = { isAddSubjectDialogOpen = true },
+                    onSubjectCardClick = onSubjectCardClick
                 )
             }
             item {
                 Button(
-                    onClick = { /*TODO*/ },
+                    onClick = onStartSessionButtonClick,
                     modifier = modifier
                         .fillMaxWidth()
                         .padding(horizontal = 48.dp, vertical = 20.dp),
@@ -212,7 +176,7 @@ fun DashboardScreen(
 //                tasks = emptyList()
                 tasks = tasks,
                 onCheckBoxClick = {},
-                onTaskCardClick = {}
+                onTaskCardClick = onTaskCardClick
             )
 
             item {
@@ -275,7 +239,8 @@ fun SubjectCardsSection(
     modifier: Modifier = Modifier,
     subjectList: List<Subject>,
     emptyListText: String = stringResource(R.string.empty_subject),
-    onAddIconClicked: () -> Unit
+    onAddIconClicked: () -> Unit,
+    onSubjectCardClick: (Int?) -> Unit
 ) {
     Column{
         //always shown
@@ -325,7 +290,7 @@ fun SubjectCardsSection(
                 SubjectCard(
                     subjectName = it.name,
                     gradientColors = it.colors,
-                    onClick = { TODO() }
+                    onClick = { onSubjectCardClick(it.subjectId) }
                 )
             }
         }
@@ -337,7 +302,11 @@ fun SubjectCardsSection(
 @Composable
 fun DashBoardPreview() {
     StudyTrackerTheme {
-        DashboardScreen()
+        DashboardScreen(
+            onSubjectCardClick = {},
+            onTaskCardClick = {},
+            onStartSessionButtonClick = {}
+        )
     }
 }
 
