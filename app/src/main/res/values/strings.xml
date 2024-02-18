@@ -11,4 +11,13 @@
     <string name="subject_name">Subject Name</string>
     <string name="goal_study_hours">Goal Study Hours</string>
     <string name="delete">Delete</string>
+    <string name="navigation_back">navigation back</string>
+    <string name="delete_subject">Delete Subject</string>
+    <string name="edit_subject">Edit Subject</string>
+    <string name="add">Add</string>
+    <string name="add_task">Add Task</string>
+    <string name="task">Task</string>
+    <string name="description">Description</string>
+    <string name="title">Title</string>
+    <string name="select_due_date">Select Due Date</string>
 </resources>
