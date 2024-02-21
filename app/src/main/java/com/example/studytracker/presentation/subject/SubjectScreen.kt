@@ -44,6 +44,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.studytracker.R
 import com.example.studytracker.domain.model.Subject
 import com.example.studytracker.presentation.components.AddSubjectDialog
@@ -90,6 +91,9 @@ fun SubjectScreen(
     onAddTaskButtonClick: () -> Unit,
     onTaskCardClick: (Int?) -> Unit
 ) {
+
+    val viewModel: SubjectViewModel = hiltViewModel()
+
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
     val listState = rememberLazyListState() // remember scroll state of items of the lazy column
     val isFABExpanded by remember {

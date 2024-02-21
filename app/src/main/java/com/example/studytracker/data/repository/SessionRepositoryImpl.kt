@@ -4,8 +4,9 @@ import com.example.studytracker.data.local.SessionDao
 import com.example.studytracker.domain.model.Session
 import com.example.studytracker.domain.repository.SessionRepository
 import kotlinx.coroutines.flow.Flow
+import javax.inject.Inject
 
-class SessionRepositoryImpl(
+class SessionRepositoryImpl @Inject constructor(
     private val sessionDao: SessionDao
 ): SessionRepository {
     override suspend fun InsertSession(session: Session) {

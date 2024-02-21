@@ -47,6 +47,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.studytracker.R
 import com.example.studytracker.presentation.components.DeleteDialog
 import com.example.studytracker.presentation.components.SubjectListBottomSheet
@@ -83,6 +84,8 @@ fun TaskScreen(
     modifier: Modifier = Modifier,
     onBackButtonClick: () -> Unit
 ) {
+    val viewModel: TaskViewModel = hiltViewModel()
+
     val scope = rememberCoroutineScope()
 
     var isDeleteDialogOpen by rememberSaveable {

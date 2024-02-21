@@ -4,8 +4,9 @@ import com.example.studytracker.data.local.SubjectDao
 import com.example.studytracker.domain.model.Subject
 import com.example.studytracker.domain.repository.SubjectRepository
 import kotlinx.coroutines.flow.Flow
+import javax.inject.Inject
 
-class SubjectRepositoryImpl(
+class SubjectRepositoryImpl @Inject constructor(
     private val subjectDao: SubjectDao
 ): SubjectRepository {
     override suspend fun upsertSubject(subject: Subject) {

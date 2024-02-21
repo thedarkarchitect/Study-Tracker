@@ -42,6 +42,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.studytracker.R
 import com.example.studytracker.domain.model.Subject
 import com.example.studytracker.presentation.components.AddSubjectDialog
@@ -69,6 +70,8 @@ import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 fun DashboardScreenRoute(
     navigator: DestinationsNavigator
 ) {
+    val viewModel: DashboardViewModel = hiltViewModel()
+
     DashboardScreen(
         onSubjectCardClick = { subjectId ->
             subjectId?.let {
@@ -286,10 +289,12 @@ fun SubjectCardsSection(
             horizontalArrangement = Arrangement.spacedBy(12.dp),
             contentPadding = PaddingValues(start = 12.dp, end = 12.dp)
         ){
-            items(subjectList){
+            items(subjectList){ it ->
                 SubjectCard(
                     subjectName = it.name,
-                    gradientColors = it.colors,
+                    gradientColors = it.colors.map{  colorInt ->
+                        Color(colorInt)
+                    },
                     onClick = { onSubjectCardClick(it.subjectId) }
                 )
             }
