@@ -3,13 +3,16 @@ package com.example.studytracker
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.ui.graphics.toArgb
 import com.example.studytracker.domain.model.Session
 import com.example.studytracker.domain.model.Subject
 import com.example.studytracker.domain.model.Task
 import com.example.studytracker.presentation.NavGraphs
 import com.example.studytracker.ui.theme.StudyTrackerTheme
 import com.ramcosta.composedestinations.DestinationsNavHost
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -22,12 +25,12 @@ class MainActivity : ComponentActivity() {
 }
 
 val subjects = listOf(
-    Subject(name = "Art", goalHours = 10f, colors = Subject.subjectCardColors.random(), subjectId = 0),
-    Subject(name = "Literature", goalHours = 10f, colors = Subject.subjectCardColors.random(), subjectId = 0),
-    Subject(name = "Geography", goalHours = 10f, colors = Subject.subjectCardColors.random(), subjectId = 0),
-    Subject(name = "Mathematics", goalHours = 10f, colors = Subject.subjectCardColors.random(), subjectId = 0),
-    Subject(name = "Biology", goalHours = 10f, colors = Subject.subjectCardColors.random(), subjectId = 0),
-    Subject(name = "Business", goalHours = 10f, colors = Subject.subjectCardColors.random(), subjectId = 0)
+    Subject(name = "Art", goalHours = 10f, colors = Subject.subjectCardColors.random().map{ it.toArgb() }, subjectId = 0),
+    Subject(name = "Literature", goalHours = 10f, colors = Subject.subjectCardColors.random().map{ it.toArgb() }, subjectId = 0),
+    Subject(name = "Geography", goalHours = 10f, colors = Subject.subjectCardColors.random().map{ it.toArgb() }, subjectId = 0),
+    Subject(name = "Mathematics", goalHours = 10f, colors = Subject.subjectCardColors.random().map{ it.toArgb() }, subjectId = 0),
+    Subject(name = "Biology", goalHours = 10f, colors = Subject.subjectCardColors.random().map{ it.toArgb() }, subjectId = 0),
+    Subject(name = "Business", goalHours = 10f, colors = Subject.subjectCardColors.random().map{ it.toArgb() }, subjectId = 0)
 )
 
 val tasks = listOf(
