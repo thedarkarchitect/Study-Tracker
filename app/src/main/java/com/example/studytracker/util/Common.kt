@@ -1,5 +1,6 @@
 package com.example.studytracker.util
 
+import androidx.compose.material3.SnackbarDuration
 import androidx.compose.ui.graphics.Color
 import com.example.studytracker.ui.theme.Green
 import com.example.studytracker.ui.theme.Orange
@@ -27,4 +28,16 @@ fun Long?.changeMillisToDateString(): String {
             .toLocalDate()
     } ?: LocalDate.now()
     return date.format(DateTimeFormatter.ofPattern("dd MM yyyy"))
+}
+
+fun Long.toHours(): Float {
+    val hours = this.toFloat() / 3600f
+    return "%.2f".format(hours).toFloat()
+}
+
+sealed class SnackbarEvent {
+    data class ShowSnackbar(
+        val message: String,
+        val duration: SnackbarDuration = SnackbarDuration.Short
+    ): SnackbarEvent()
 }
