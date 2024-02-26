@@ -1,4 +1,4 @@
-package com.example.studytracker.data.local
+package com.example.studytracker.data.local.dao
 
 import androidx.room.Dao
 import androidx.room.Query

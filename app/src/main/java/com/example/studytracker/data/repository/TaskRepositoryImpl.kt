@@ -1,6 +1,6 @@
 package com.example.studytracker.data.repository
 
-import com.example.studytracker.data.local.TaskDao
+import com.example.studytracker.data.local.dao.TaskDao
 import com.example.studytracker.domain.model.Task
 import com.example.studytracker.domain.repository.TaskRepository
 import kotlinx.coroutines.flow.Flow
@@ -15,19 +15,23 @@ class TaskRepositoryImpl @Inject constructor(
     }
 
     override suspend fun deleteTask(taskId: Int) {
-        TODO("Not yet implemented")
+        taskDao.deleteTask(taskId)
     }
 
     override suspend fun getTaskById(taskId: Int): Task? {
-        TODO("Not yet implemented")
+        return taskDao.getTaskById(taskId)
     }
 
     override fun getUpcomingTasksForSubject(subjectId: Int): Flow<List<Task>> {
-        TODO("Not yet implemented")
+        return taskDao.getTasksForSubject(subjectId)
+            .map { tasks -> tasks.filter { it.isComplete.not() } }
+            .map { tasks -> sortTasks(tasks) }
     }
 
     override fun getCompletedTasksForSubject(subjectId: Int): Flow<List<Task>> {
-        TODO("Not yet implemented")
+        return taskDao.getTasksForSubject(subjectId)
+            .map { tasks -> tasks.filter { it.isComplete } }
+            .map { tasks -> sortTasks(tasks) }
     }
 
     override fun getAllUpcomingTasks(): Flow<List<Task>> {
