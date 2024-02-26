@@ -1,6 +1,6 @@
 package com.example.studytracker.data.repository
 
-import com.example.studytracker.data.local.SessionDao
+import com.example.studytracker.data.local.dao.SessionDao
 import com.example.studytracker.domain.model.Session
 import com.example.studytracker.domain.repository.SessionRepository
 import kotlinx.coroutines.flow.Flow
@@ -11,15 +11,15 @@ class SessionRepositoryImpl @Inject constructor(
     private val sessionDao: SessionDao
 ): SessionRepository {
     override suspend fun InsertSession(session: Session) {
-        TODO("Not yet implemented")
+        sessionDao.InsertSession(session)
     }
 
     override suspend fun deleteSession(session: Session) {
-        TODO("Not yet implemented")
+        sessionDao.deleteSession(session)
     }
 
     override fun getAllSessions(): Flow<List<Session>> {
-        TODO("Not yet implemented")
+        return sessionDao.getAllSessions()
     }
 
     override fun getRecentFiveSessions(): Flow<List<Session>> {
@@ -27,7 +27,7 @@ class SessionRepositoryImpl @Inject constructor(
     }
 
     override fun getRecentTenSessionsForSubject(subjectId: Int): Flow<List<Session>> {
-        TODO("Not yet implemented")
+        return sessionDao.getRecentSessionsForSubject(subjectId).take(count = 10)
     }
 
     override fun getTotalSessionsDuration(): Flow<Long> {
@@ -35,6 +35,6 @@ class SessionRepositoryImpl @Inject constructor(
     }
 
     override fun getTotalSessionsDurationBySubjectId(subjectId: Int): Flow<Long> {
-        TODO("Not yet implemented")
+        return sessionDao.getTotalSessionDurationBySubjectId(subjectId)
     }
 }

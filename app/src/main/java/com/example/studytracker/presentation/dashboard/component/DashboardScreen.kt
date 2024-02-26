@@ -1,4 +1,4 @@
-package com.example.studytracker.presentation.dashboard
+package com.example.studytracker.presentation.dashboard.component
 
 
 import android.content.res.Configuration
@@ -57,11 +57,14 @@ import com.example.studytracker.presentation.components.DeleteDialog
 import com.example.studytracker.presentation.components.SubjectCard
 import com.example.studytracker.presentation.components.studySessionsList
 import com.example.studytracker.presentation.components.tasksList
+import com.example.studytracker.presentation.dashboard.DashboardEvent
+import com.example.studytracker.presentation.dashboard.DashboardState
+import com.example.studytracker.presentation.dashboard.DashboardViewModel
 import com.example.studytracker.presentation.destinations.SessionScreenRouteDestination
 import com.example.studytracker.presentation.destinations.SubjectScreenRouteDestination
 import com.example.studytracker.presentation.destinations.TaskScreenRouteDestination
-import com.example.studytracker.presentation.subject.SubjectScreenNavArgs
-import com.example.studytracker.presentation.task.TaskScreenNavArgs
+import com.example.studytracker.presentation.subject.components.SubjectScreenNavArgs
+import com.example.studytracker.presentation.task.components.TaskScreenNavArgs
 import com.example.studytracker.ui.theme.StudyTrackerTheme
 import com.example.studytracker.util.SnackbarEvent
 import com.ramcosta.composedestinations.annotation.Destination
@@ -89,6 +92,7 @@ fun DashboardScreenRoute(
         recentSessions = recentSessions,
         snackbarEvent = viewModel.snackbarEventFlow,
         onSubjectCardClick = { subjectId ->
+            //this will use the subject id to tap into the subject properties
             subjectId?.let {
                 val navArg = SubjectScreenNavArgs(subjectId = subjectId)
                 navigator.navigate(SubjectScreenRouteDestination(navArgs = navArg))
@@ -121,7 +125,7 @@ fun DashboardScreen(
     var isAddSubjectDialogOpen by rememberSaveable { mutableStateOf(false) }
     var isDeleteSessionDialogOpen by rememberSaveable { mutableStateOf(false) }
 
-    var snackbarHostState = remember { SnackbarHostState() }
+    val snackbarHostState = remember { SnackbarHostState() }
 
     LaunchedEffect(key1 = true){ // this is useful when you want to execute non composable code or code that runs in a coroutine
         snackbarEvent.collectLatest {  event ->
@@ -131,6 +135,10 @@ fun DashboardScreen(
                         message = event.message,
                         duration = event.duration
                     )
+                }
+
+                SnackbarEvent.NavigateUp -> {
+
                 }
             }
         }

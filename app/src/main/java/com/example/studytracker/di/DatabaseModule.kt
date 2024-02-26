@@ -2,9 +2,9 @@ package com.example.studytracker.di
 
 import android.app.Application
 import androidx.room.Room
-import com.example.studytracker.data.local.SessionDao
-import com.example.studytracker.data.local.SubjectDao
-import com.example.studytracker.data.local.TaskDao
+import com.example.studytracker.data.local.dao.SessionDao
+import com.example.studytracker.data.local.dao.SubjectDao
+import com.example.studytracker.data.local.dao.TaskDao
 import com.example.studytracker.data.local.TrackerDatabase
 import dagger.Module
 import dagger.Provides
@@ -32,7 +32,7 @@ object DatabaseModule {
     @Singleton
     fun provideSubjectDao(
         database: TrackerDatabase
-    ):SubjectDao {
+    ): SubjectDao {
         return database.subjectDao()
     }
 

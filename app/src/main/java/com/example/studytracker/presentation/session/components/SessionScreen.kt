@@ -1,4 +1,4 @@
-package com.example.studytracker.presentation.session
+package com.example.studytracker.presentation.session.components
 
 import android.content.res.Configuration
 import androidx.compose.foundation.border
@@ -42,6 +42,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.studytracker.presentation.components.DeleteDialog
 import com.example.studytracker.presentation.components.SubjectListBottomSheet
 import com.example.studytracker.presentation.components.studySessionsList
+import com.example.studytracker.presentation.session.SessionViewModel
 import com.example.studytracker.sessions
 import com.example.studytracker.subjects
 import com.example.studytracker.ui.theme.StudyTrackerTheme
