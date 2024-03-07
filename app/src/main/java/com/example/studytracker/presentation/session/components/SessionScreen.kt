@@ -35,6 +35,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -42,10 +43,13 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.studytracker.presentation.components.DeleteDialog
 import com.example.studytracker.presentation.components.SubjectListBottomSheet
 import com.example.studytracker.presentation.components.studySessionsList
+import com.example.studytracker.presentation.session.ServiceHelper
 import com.example.studytracker.presentation.session.SessionViewModel
 import com.example.studytracker.sessions
 import com.example.studytracker.subjects
 import com.example.studytracker.ui.theme.StudyTrackerTheme
+import com.example.studytracker.util.Constants.ACTION_SERVICE_CANCEL
+import com.example.studytracker.util.Constants.ACTION_SERVICE_START
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import kotlinx.coroutines.launch
@@ -55,6 +59,9 @@ import kotlinx.coroutines.launch
 fun SessionScreenRoute(
     navigator: DestinationsNavigator
 ) {
+
+    val viewModel: SessionViewModel = hiltViewModel()
+
     SessionScreen(
         onBackButtonClick = { navigator.navigateUp() }
     )
@@ -67,8 +74,7 @@ fun SessionScreen(
     onBackButtonClick: () -> Unit
 ) {
 
-    val viewModel: SessionViewModel = hiltViewModel()
-
+    val context = LocalContext.current
     val scope = rememberCoroutineScope()
     val sheetState = rememberModalBottomSheetState()
     var isBottomSheetOpen by remember { mutableStateOf(false) }
@@ -130,9 +136,24 @@ fun SessionScreen(
             }
             item {
                 ButtonSection(
-                    startButtonClicked = {  },
-                    cancelButtonClicked = {  },
-                    finishButtonClicked = { }
+                    startButtonClicked = {
+                        ServiceHelper.triggerForegroundService(
+                            context = context,
+                            action = ACTION_SERVICE_START
+                        )
+                    },
+                    cancelButtonClicked = {
+                        ServiceHelper.triggerForegroundService(
+                        context = context,
+                        action = ACTION_SERVICE_CANCEL
+                        )
+                    },
+                    finishButtonClicked = {
+//                        ServiceHelper.triggerForegroundService(
+//                            context = context,
+//                            action = ACTION_SERVICE_START
+//                        )
+                    }
                 )
             }
             studySessionsList(
