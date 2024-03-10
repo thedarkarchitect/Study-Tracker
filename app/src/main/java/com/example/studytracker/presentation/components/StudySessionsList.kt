@@ -29,6 +29,8 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.example.studytracker.R
 import com.example.studytracker.domain.model.Session
+import com.example.studytracker.util.changeMillisToDateString
+import com.example.studytracker.util.toHours
 
 fun LazyListScope.studySessionsList(
     modifier: Modifier = Modifier,
@@ -106,13 +108,13 @@ fun StudySessionCard(
                 )
                 Spacer(modifier = modifier.height(2.dp))
                 Text(
-                    text = "${session.date}",
+                    text = session.date.changeMillisToDateString(),
                     style = MaterialTheme.typography.bodySmall
                 )
             }
             Spacer(modifier = modifier.weight(1f))
             Text(
-                text = "${session.duration} hr",
+                text = "${session.duration.toHours()} hr",
                 style = MaterialTheme.typography.titleMedium
             )
             IconButton(onClick = onDeleteIconClick) {

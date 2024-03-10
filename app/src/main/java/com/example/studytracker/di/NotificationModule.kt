@@ -11,6 +11,7 @@ import dagger.hilt.android.components.ServiceComponent
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.android.scopes.ServiceScoped
 import com.example.studytracker.R
+import com.example.studytracker.presentation.session.ServiceHelper
 
 @Module
 @InstallIn(ServiceComponent::class)
@@ -27,6 +28,7 @@ object NotificationModule {
             .setContentText("00:00:00")
             .setSmallIcon(R.drawable.ic_launcher_foreground)
             .setOngoing(true)
+            .setContentIntent(ServiceHelper.clickPendingIntent(context))
     }
 
     @ServiceScoped

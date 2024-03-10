@@ -8,4 +8,6 @@ object Constants {//This will control the timing service
     const val NOTIFICATION_CHANNEL_ID = "TIMER_NOTIFICATION_ID"
     const val NOTIFICATION_CHANNEL_NAME = "TIMER_NOTIFICATION"
     const val NOTIFICATION_ID = 10
+
+    const val CLICK_REQUEST_CODE = 100
 }

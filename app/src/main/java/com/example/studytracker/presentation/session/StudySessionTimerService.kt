@@ -1,9 +1,11 @@
 package com.example.studytracker.presentation.session
 
+import android.annotation.SuppressLint
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.Service
 import android.content.Intent
+import android.os.Binder
 import android.os.IBinder
 import androidx.compose.runtime.mutableStateOf
 import androidx.core.app.NotificationCompat.Builder
@@ -27,6 +29,8 @@ class StudySessionTimerService: Service() {
     @Inject
     lateinit var notificationManager: NotificationManager
 
+    private val binder = StudySessionTimerBinder()
+
     @Inject
     lateinit var notificationBuilder: Builder
 
@@ -47,7 +51,8 @@ class StudySessionTimerService: Service() {
     var currentTimerState = mutableStateOf(TimerState.IDLE)
         private set
 
-    override fun onBind(intent: Intent?): IBinder? = null
+    var subjectId = mutableStateOf<Int?>(null)
+    override fun onBind(intent: Intent?) = binder
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         intent?.action.let {
@@ -55,19 +60,31 @@ class StudySessionTimerService: Service() {
                 ACTION_SERVICE_START -> {
                     startForegroundService()
                     startTimer { hours, minutes, seconds ->
-
+                        updateNotification(hours, minutes, seconds)
                     }
                 }
-                ACTION_SERVICE_STOP -> {}
-                ACTION_SERVICE_CANCEL -> {}
+                ACTION_SERVICE_STOP -> {
+                    stopTimer()
+                }
+                ACTION_SERVICE_CANCEL -> {
+                    stopTimer()
+                    cancelTimer()
+                }
             }
         }
         return super.onStartCommand(intent, flags, startId)
     }
 
+    @SuppressLint("ForegroundServiceType")
     private fun startForegroundService(){
         createNotificationChannel()
         startForeground(NOTIFICATION_ID, notificationBuilder.build())
+    }
+
+    private fun stopForegroundService() {
+        notificationManager.cancel(NOTIFICATION_ID)
+        stopForeground(STOP_FOREGROUND_REMOVE)
+        stopSelf()
     }
 
     private fun createNotificationChannel() {
@@ -100,12 +117,29 @@ class StudySessionTimerService: Service() {
         }
     }
 
+    private fun stopTimer() {
+        if(this::timer.isInitialized) {
+            timer.cancel()
+        }
+        currentTimerState.value = TimerState.STOPPED
+    }
+
+    private fun cancelTimer() {
+        duration = Duration.ZERO
+        updateTimeUnits()
+        currentTimerState.value = TimerState.IDLE
+    }
+
     private fun updateTimeUnits() {
         duration.toComponents{ hours, minutes, seconds, _ ->
             this@StudySessionTimerService.hours.value = hours.toInt().pad()
             this@StudySessionTimerService.minutes.value = minutes.pad()
             this@StudySessionTimerService.seconds.value = seconds.pad()
         }
+    }
+
+    inner class StudySessionTimerBinder: Binder() {
+        fun getService(): StudySessionTimerService = this@StudySessionTimerService
     }
 
 }
